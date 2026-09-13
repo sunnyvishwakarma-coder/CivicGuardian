@@ -5,7 +5,7 @@ const createIssue = async (req, res) => {
         const { category, description, latitude, longitude, image } = req.body;
 
         const issue = await Issue.create({
-            userId: req.user.id,
+            userId: req.user.userId,
             category,
             description,
             location: {
