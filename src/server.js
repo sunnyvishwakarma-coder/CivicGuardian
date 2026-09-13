@@ -4,6 +4,7 @@ const express = require("express");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const issueRoutes = require("./routes/issueRoutes");
+const authorityRoutes = require("./routes/authorityRoutes");
 
 const app = express();
 
@@ -18,6 +19,7 @@ connectDB();
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/issues", issueRoutes);
+app.use("/api/authorities", authorityRoutes);
 
 // Home route
 app.get("/", (req, res) => {
