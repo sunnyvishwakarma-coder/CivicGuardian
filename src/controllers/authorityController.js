@@ -1,8 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Authority = require("../models/Authority");
+const Worker = require("../models/Worker");
 
-const createAuthority = async (req, res) => {
+const registerAuthority = async (req, res) => {
     try {
         const { name, email, password, department } = req.body;
 
@@ -103,8 +104,76 @@ const authorityLogin = async (req, res) => {
     }
 };
 
+const createWorker = async (req, res) => {
+    try {
+        const {
+            name,
+            phone,
+            department,
+            employeeId
+        } = req.body;
+
+        // Check required fields
+        if (!name || !phone || !department || !employeeId) {
+            return res.status(400).json({
+                message: "All worker fields are required"
+            });
+        }
+
+        // Check if employee already exists
+        const existingWorker = await Worker.findOne({
+            employeeId
+        });
+
+        if (existingWorker) {
+            return res.status(400).json({
+                message: "Worker with this employee ID already exists"
+            });
+        }
+
+        // Create worker
+        const worker = await Worker.create({
+            name,
+            phone,
+            department,
+            employeeId
+        });
+
+        res.status(201).json({
+            message: "Worker created successfully",
+            worker
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to create worker",
+            error: error.message
+        });
+    }
+};
+
+const getWorkers = async (req, res) => {
+    try {
+        const workers = await Worker.find()
+            .sort({ createdAt: -1 });
+
+        res.status(200).json({
+            count: workers.length,
+            workers
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to fetch workers",
+            error: error.message
+        });
+    }
+};
+
 
 module.exports = {
-    createAuthority,
-    authorityLogin
+    registerAuthority,
+    authorityLogin,
+  createWorker,
+    getWorkers
 };
