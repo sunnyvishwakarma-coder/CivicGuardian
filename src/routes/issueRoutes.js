@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../middleware/uploadMiddleware");
 
 const {
     createIssue,
@@ -16,7 +17,12 @@ const {
 const authMiddleware = require("../middleware/authMiddleware");
 const authorityMiddleware = require("../middleware/authorityMiddleware");
 
-router.post("/", authMiddleware, createIssue);
+router.post(
+    "/",
+    authMiddleware,
+    upload.single("image"),
+    createIssue
+);
 
 router.get("/my", authMiddleware, getMyIssues);
 
@@ -25,6 +31,7 @@ router.get("/:id", authMiddleware, getIssueById);
 router.patch(
     "/:id/status",
     authMiddleware,
+    authorityMiddleware,
     updateIssueStatus
 );
 
@@ -56,6 +63,10 @@ router.patch(
 router.patch(
     "/:id/resolution",
     authorityMiddleware,
+    upload.fields([
+        { name: "beforeImage", maxCount: 1 },
+        { name: "afterImage", maxCount: 1 }
+    ]),
     submitResolution
 );
 

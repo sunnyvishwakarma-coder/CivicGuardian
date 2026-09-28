@@ -27,7 +27,15 @@ const issueSchema = new mongoose.Schema(
         },
 
         image: {
-            url: String
+            url: {
+                type: String,
+                required: true
+            },
+
+            publicId: {
+                type: String,
+                required: true
+            }
         },
 
         location: {
@@ -38,7 +46,11 @@ const issueSchema = new mongoose.Schema(
             longitude: {
                 type: Number,
                 required: true
-            }
+          },
+          address: {
+                  type: String,
+                  default: ""
+              }
         },
 
         status: {
@@ -86,14 +98,26 @@ const issueSchema = new mongoose.Schema(
             },
 
             beforeImage: {
-                type: String,
-                default: ""
-            },
+                    url: {
+                        type: String,
+                        default: ""
+                    },
+                    publicId: {
+                        type: String,
+                        default: ""
+                    }
+                },
 
-            afterImage: {
-                type: String,
-                default: ""
-            },
+                afterImage: {
+                    url: {
+                        type: String,
+                        default: ""
+                    },
+                    publicId: {
+                        type: String,
+                        default: ""
+                    }
+                },
 
             submittedAt: {
                 type: Date,
